@@ -5,7 +5,7 @@
     "dbPort": 27017
   },
   "name": "mongo-test-db",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Tim Kuijsten <tim@netsend.nl> (https://github.com/timkuijsten)",
   "license": "MIT",
   "description": "Setup database connections and load fixtures.",
@@ -14,7 +14,7 @@
   "main": "main.js",
   "bugs" : "https://github.com/timkuijsten/mongo-test-db/issues",
   "dependencies" : {
-    "mongodb" : ">=1.2.0"
+    "mongodb" : ">=1.0.0"
   },
   "devDependencies": {
     "mocha": ">=1.8.2"
