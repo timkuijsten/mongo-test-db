@@ -1,6 +1,6 @@
 # mongo-test-db
 
-mongo-test-db is small utility to load database connections and fixtures
+mongo-test-db is a small utility to load database connections and fixtures
 suitable for testing.
 
 # Usage
