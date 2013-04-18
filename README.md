@@ -4,7 +4,15 @@ mongo-test-db is a small utility to load database connections and fixtures
 suitable for testing.
 
 # Usage
-    // simplest use case without fixtures
+### Simplest use case without fixtures
+    var MongoTestDb = require('mongo-test-db');
+    var db = new MongoTestDb();
+
+    db.open(function (err) {
+      // do some stuff with db.connection
+    });
+
+### Example with fixtures and options
     var MongoTestDb = require('mongo-test-db');
     var db = new MongoTestDb({
       dbHost: '10.0.0.123', // defaults to "127.0.0.1" if omitted
@@ -12,11 +20,6 @@ suitable for testing.
       dbName: 'myDb'        // defaults to "test" if omitted
     });
 
-    db.open(function (err) {
-      // do some stuff with db.connection
-    });
-
-    // example with fixtures
     var fixtures = {
       myCollection: [
         { foo: 'bar' },
