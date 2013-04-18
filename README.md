@@ -6,10 +6,13 @@ suitable for testing.
 # Usage
     // simplest use case without fixtures
     var MongoTestDb = require('mongo-test-db');
-    var db = new MongoTestDb();
+    var db = new MongoTestDb({
+      dbHost: '10.0.0.123', // defaults to "127.0.0.1" if omitted
+      dbPort: 27009,        // defaults to 27017 if omitted
+      dbName: 'myDb'        // defaults to "test" if omitted
+    });
 
     db.open(function (err) {
-      if (err) { throw err; }
       // do some stuff with db.connection
     });
 
@@ -22,10 +25,9 @@ suitable for testing.
     }
 
     db.open(fixtures, function (err) {
-      if (err) { throw err; }
       // now a collection named "myCollection" is created that contains two
       // items
-      // do some stuff with db.connection
+      // raw connection available at db.connection
     });
 
 # Installation

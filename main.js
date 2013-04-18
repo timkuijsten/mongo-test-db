@@ -26,14 +26,16 @@ module.exports = MongoTestDb;
 /**
  * Open database connection.
  *
- * @param {Function} [collections] optional object containing collection names and arrays of objects for the collection
- * @param {Function} [cb]          optional callback is passed (err, connection)
+ * Make the raw connection available at this.connection.
  *
- * @events   'open'    passed connection
+ * @param {Function} [collections] optional object containing collection names and arrays of objects for the collection
+ * @param {Function} [cb]          optional callback. Get's error if error occurred as first parameter and the connection as a second parameter.
+ *
+ * @events   'open'
  *           'error'   passed error
  */
 MongoTestDb.prototype.open = function open(collections, cb) {
-  if (collections && typeof collections === 'function') {
+  if (typeof collections === 'function') {
     cb = collections;
     collections = {};
   }
@@ -41,18 +43,21 @@ MongoTestDb.prototype.open = function open(collections, cb) {
   collections = collections || {};
   cb = cb || function () {};
 
+  var that = this;
   if (this.state === 'opening') {
-    cb(null, this.connection);
+    process.nextTick(function() {
+      cb(new Error('already opening'));
+    });
     return;
   }
   this.state = 'opening';
 
-  var that = this;
   this.db.open(function (err, connection) {
     if (err) {
       that.state = 'error';
       cb(err);
-      return that.emit('error', err);
+      that.emit('error', err);
+      return;
     }
 
     that.connection = connection;
@@ -60,13 +65,13 @@ MongoTestDb.prototype.open = function open(collections, cb) {
     that.state = 'open';
 
     if (Object.keys(collections).length > 0) {
-      that.load(collections, function (err) {
-        cb(err, connection);
-        that.emit('open', connection);
+      that.load(collections, function (loadErr) {
+        cb(loadErr, connection);
+        that.emit('open');
       });
     } else {
-      cb(err, connection);
-      that.emit('open', connection);
+      cb(null, connection);
+      that.emit('open');
     }
   });
 };
@@ -83,7 +88,7 @@ MongoTestDb.prototype.close = function close(cb) {
   if (!cb) { cb = function () {}; }
 
   if (this.state === 'closing') {
-    cb();
+    process.nextTick(cb);
     return;
   }
   this.state = 'closing';
@@ -93,7 +98,8 @@ MongoTestDb.prototype.close = function close(cb) {
     if (err) {
       that.state = 'error';
       cb(err);
-      return that.emit('error', err);
+      that.emit('error', err);
+      return;
     }
 
     that.connection.close();
@@ -113,7 +119,10 @@ MongoTestDb.prototype.load = function load(collections, cb) {
   cb = cb || function () {};
 
   if (this.state !== 'open') {
-    return cb(new Error('not open while trying to load'));
+    process.nextTick(function() {
+      cb(new Error('not open while trying to load'));
+    });
+    return;
   }
 
   var collectionKeys = Object.keys(collections);
@@ -121,7 +130,8 @@ MongoTestDb.prototype.load = function load(collections, cb) {
 
   // in case of 0 collections
   if (loaded === collectionKeys.length) {
-    return cb();
+    process.nextTick(cb);
+    return;
   }
 
   var that = this;
@@ -130,8 +140,8 @@ MongoTestDb.prototype.load = function load(collections, cb) {
     var collectionItems = collections[collection].length;
 
     // save collection data
-    that.db.collection(collection).remove({}, {w: 1}, function (err) {
-      if (err) { return cb(err); }
+    that.db.collection(collection).remove({}, {w: 1}, function (removeErr) {
+      if (removeErr) { return cb(removeErr); }
 
       collections[collection].forEach(function (obj) {
         // date conversion: if a key has a sub object with a key '$date', transform it to a JS Date
@@ -141,8 +151,8 @@ MongoTestDb.prototype.load = function load(collections, cb) {
           }
         });
 
-        that.db.collection(collection).insert(obj, {w: 1}, function (err) {
-          if (err) { return cb(err); }
+        that.db.collection(collection).insert(obj, {w: 1}, function (insertErr) {
+          if (insertErr) { return cb(insertErr); }
 
           collectionItemsLoaded++;
           if (collectionItemsLoaded === collectionItems) {
