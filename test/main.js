@@ -7,9 +7,12 @@ var db = new MongoTestDb(config);
 var testCollection = 'my_collection';
 var fixture1 = { foo: 'bar' };
 var fixture2 = { foo: 'baz' };
+var fixture3 = { foo: 'bal' };
+var fixture4 = { foo: 'bak' };
+var fixture5 = { foo: 'bam' };
 
 var fixtures = {};
-fixtures[testCollection] = [ fixture1, fixture2 ];
+fixtures[testCollection] = [ fixture1, fixture2, fixture3, fixture4, fixture5 ];
 
 describe('main', function () {
   it('should open the db', function (done) {
@@ -43,9 +46,16 @@ describe('main', function () {
       if (err) { return done(err); }
 
       db.connection.collection(testCollection).find().toArray(function(err, items) {
-        assert.strictEqual(items.length, 2);
-        db.close(done);
+        assert.strictEqual(items.length, 5);
+        done();
       });
+    });
+  });
+
+  it('should return the fixtures in the same order', function (done) {
+    db.connection.collection(testCollection).find().toArray(function(err, items) {
+      assert.deepEqual(items,[fixture1, fixture2, fixture3, fixture4, fixture5]);
+      db.close(done);
     });
   });
 });
