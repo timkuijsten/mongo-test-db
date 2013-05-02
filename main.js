@@ -1,6 +1,8 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 
+var async = require('async');
+
 var mongodb = require('mongodb');
 
 var MongoTestDb = function MongoTestDb(spec) {
@@ -135,14 +137,12 @@ MongoTestDb.prototype.load = function load(collections, cb) {
   }
 
   var that = this;
-  collectionKeys.forEach(function (collection) {
-    var collectionItemsLoaded = 0;
-    var collectionItems = collections[collection].length;
-
+  async.each(collectionKeys, function (collection, cb) {
     // save collection data
     that.db.collection(collection).remove({}, {w: 1}, function (removeErr) {
       if (removeErr) { return cb(removeErr); }
 
+      var inserts = [];
       collections[collection].forEach(function (obj) {
         // date conversion: if a key has a sub object with a key '$date', transform it to a JS Date
         Object.keys(obj).forEach(function (key) {
@@ -151,18 +151,15 @@ MongoTestDb.prototype.load = function load(collections, cb) {
           }
         });
 
-        that.db.collection(collection).insert(obj, {w: 1}, function (insertErr) {
-          if (insertErr) { return cb(insertErr); }
-
-          collectionItemsLoaded++;
-          if (collectionItemsLoaded === collectionItems) {
-            loaded++;
-            if (loaded === collectionKeys.length) {
-              return cb();
-            }
-          }
+        inserts.push(function(cb) {
+          that.db.collection(collection).insert(obj, {w: 1}, function (insertErr) {
+            if (insertErr) { return cb(insertErr); }
+            return cb(null);
+          });
         });
+
       });
+      async.series(inserts, cb);
     });
-  });
+  }, cb);
 };
