@@ -14,7 +14,8 @@
   "main": "main.js",
   "bugs" : "https://github.com/timkuijsten/mongo-test-db/issues",
   "dependencies" : {
-    "mongodb" : ">=1.0.0"
+    "mongodb" : ">=1.0.0",
+    "async" : ">=0.2.8"
   },
   "devDependencies": {
     "mocha": ">=1.8.2"
