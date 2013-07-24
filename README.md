@@ -2,7 +2,7 @@
 
 Small utility to load database connections and fixtures suitable for testing.
 
-# Usage
+## Usage
 ### Simplest use case without fixtures
     var MongoTestDb = require('mongo-test-db');
     var db = new MongoTestDb();
@@ -34,7 +34,7 @@ Small utility to load database connections and fixtures suitable for testing.
       // raw connection available at db.connection
     });
 
-# Installation
+## Installation
 
     $ npm install mongo-test-db
 

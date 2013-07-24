@@ -21,7 +21,7 @@ var MongoTestDb = function MongoTestDb(spec) {
 
   var Db = mongodb.Db;
   var DbServer = mongodb.Server;
-  this.db = new Db(this.dbName, new DbServer(this.dbHost, this.dbPort), { w: 0 });
+  this.db = new Db(this.dbName, new DbServer(this.dbHost, this.dbPort), {w: 1});
 };
 util.inherits(MongoTestDb, EventEmitter);
 
