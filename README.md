@@ -41,7 +41,3 @@ Small utility to load database connections and fixtures suitable for testing.
 ## License
 
 MIT, see LICENSE
-
-## Bugs
-
-See <https://github.com/timkuijsten/mongo-test-db/issues>.
