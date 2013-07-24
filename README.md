@@ -1,7 +1,6 @@
 # mongo-test-db
 
-mongo-test-db is a small utility to load database connections and fixtures
-suitable for testing.
+Small utility to load database connections and fixtures suitable for testing.
 
 # Usage
 ### Simplest use case without fixtures
@@ -17,7 +16,9 @@ suitable for testing.
     var db = new MongoTestDb({
       dbHost: '10.0.0.123', // defaults to "127.0.0.1" if omitted
       dbPort: 27009,        // defaults to 27017 if omitted
-      dbName: 'myDb'        // defaults to "test" if omitted
+      dbName: 'myDb',       // defaults to "test" if omitted
+      dbUser: 'joe',        // optional
+      dbPass: 'secret'      // optional
     });
 
     var fixtures = {

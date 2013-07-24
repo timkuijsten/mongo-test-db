@@ -13,6 +13,8 @@ var MongoTestDb = function MongoTestDb(spec) {
   this.dbName = spec.dbName || 'test';
   this.dbHost = spec.dbHost || '127.0.0.1';
   this.dbPort = spec.dbPort || 27017;
+  this.dbUser = spec.dbUser || null;
+  this.dbPass = spec.dbPass || null;
   this.connection = false;
 
   this.state = 'closed';
@@ -30,8 +32,10 @@ module.exports = MongoTestDb;
  *
  * Make the raw connection available at this.connection.
  *
- * @param {Function} [collections] optional object containing collection names and arrays of objects for the collection
- * @param {Function} [cb]          optional callback. Get's error if error occurred as first parameter and the connection as a second parameter.
+ * @param {Function} [collections]  optional object containing collection names and
+ *                                  arrays of objects for the collection
+ * @param {Function} [cb]  optional callback. Get's error if error occurred as
+ *                         first parameter and the connection as a second parameter
  *
  * @events   'open'
  *           'error'   passed error
@@ -62,18 +66,34 @@ MongoTestDb.prototype.open = function open(collections, cb) {
       return;
     }
 
-    that.connection = connection;
+    function proceed() {
+      that.connection = connection;
 
-    that.state = 'open';
+      that.state = 'open';
 
-    if (Object.keys(collections).length > 0) {
-      that.load(collections, function (loadErr) {
-        cb(loadErr, connection);
+      if (Object.keys(collections).length > 0) {
+        that.load(collections, function (loadErr) {
+          cb(loadErr, connection);
+          that.emit('open');
+        });
+      } else {
+        cb(null, connection);
         that.emit('open');
+      }
+    }
+
+    if (that.dbUser || that.dbPass) {
+      that.db.authenticate(that.dbUser, that.dbPass, function(err) {
+        if (err) {
+          that.state = 'error';
+          cb(err);
+          that.emit('error', err);
+          return;
+        }
+        proceed();
       });
     } else {
-      cb(null, connection);
-      that.emit('open');
+      proceed();
     }
   });
 };
