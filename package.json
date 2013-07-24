@@ -5,8 +5,9 @@
     "dbPort": 27017
   },
   "name": "mongo-test-db",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Tim Kuijsten <tim@netsend.nl> (https://github.com/timkuijsten)",
+  "contributors": ["Sander Baas <sander@implode.nl> (https://github.com/sanderbaas)"],
   "license": "MIT",
   "description": "Setup database connections and load fixtures.",
   "keywords": [ "mongo", "test", "database" ],
@@ -25,6 +26,6 @@
   },
   "repository": {
     "type" : "git",
-    "url" : "http://github.com/timkuijsten/mongo-test-db.git"
+    "url" : "git://github.com/timkuijsten/mongo-test-db.git"
   }
 }

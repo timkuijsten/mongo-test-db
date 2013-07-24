@@ -1,0 +1,32 @@
+2013.07.23, Version 0.3.1
+
+* use write concern w: 1 for feedback on errors
+
+* support authentication
+
+
+2013.05.02, Version 0.3.0
+
+* ensure natural insertion order of fixtures (Sander Baas)
+
+
+2013.04.18, Version 0.2.1
+
+* doc updates
+
+
+2013.04.18, Version 0.2.0
+
+* make db.open and load always async
+
+
+2013.04.04, Version 0.1.1
+
+* lower mongodb dependencies
+
+* doc updates
+
+
+2013.04.02, Version 0.1.0
+
+* initial release
