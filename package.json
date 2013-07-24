@@ -10,7 +10,7 @@
   "contributors": ["Sander Baas <sander@implode.nl> (https://github.com/sanderbaas)"],
   "license": "MIT",
   "description": "Setup database connections and load fixtures.",
-  "keywords": [ "mongo", "test", "database" ],
+  "keywords": [ "mongodb", "test", "database" ],
   "engines": { "node" : ">=0.8.14" },
   "main": "main.js",
   "bugs" : "https://github.com/timkuijsten/mongo-test-db/issues",
