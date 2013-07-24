@@ -5,7 +5,7 @@
     "dbPort": 27017
   },
   "name": "mongo-test-db",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Tim Kuijsten <tim@netsend.nl> (https://github.com/timkuijsten)",
   "contributors": ["Sander Baas <sander@implode.nl> (https://github.com/sanderbaas)"],
   "license": "MIT",
